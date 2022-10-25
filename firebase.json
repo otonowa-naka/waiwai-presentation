@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "waiwai-web/build",
     "ignore": [
       "firebase.json",
       "**/.*",
