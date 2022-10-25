@@ -10,8 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       # ビルドが必要になったら入れる
-      - run: cd ./waiwai-web
-      - run: npm ci && npm run build
+      - run: cd ./waiwai-web && npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
