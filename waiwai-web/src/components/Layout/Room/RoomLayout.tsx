@@ -12,7 +12,6 @@ export const RoomLayout:FC = ()=>
     <div>
       <h1>簡単メモアプリ</h1>
       <CommentPush PushComment={PushComment}></CommentPush>
-      <CommentPush PushComment={PushComment}></CommentPush>
       <CommentList comments={comments}></CommentList>
     </div>
   )

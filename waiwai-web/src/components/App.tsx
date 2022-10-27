@@ -1,16 +1,18 @@
-import { FC, useState } from "react"
+import { FC } from "react"
 import { RootLayout } from "./Layout/Root/RootLayout"
 import { RoomLayout } from "./Layout/Room/RoomLayout"
+
+import {useSelector} from '../store'
+
 export const App:FC = ()=>
 {
-  // メインステータス
-  const [roomId, SetRootID] = useState("")
+  const roomID_redux = useSelector((state)=> state.roomID.roomId)
 
   return(
     <div>
       <h1>ワイワイプレゼンテーション</h1>
       {
-        roomId === "" ? <RootLayout CreateRoom={()=>{}} SetRootID={SetRootID}/>:<RoomLayout/>        
+        roomID_redux === "" ? <RootLayout/>:<RoomLayout/>        
       }
     </div>
   )
