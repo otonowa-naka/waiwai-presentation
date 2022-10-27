@@ -1,19 +1,17 @@
-import { FC } from "react"
-import { CommentList } from "./Elements/CommentList/CommentList"
-import { useComments } from "../hooks/useComments"
-import { CommentPush } from "./Elements/CommentPush/CommentPush"
-
+import { FC, useState } from "react"
+import { RootLayout } from "./Layout/Root/RootLayout"
+import { RoomLayout } from "./Layout/Room/RoomLayout"
 export const App:FC = ()=>
 {
-  // コメント一覧
-  const {comments, PushComment} = useComments()
+  // メインステータス
+  const [roomId, SetRootID] = useState("")
 
   return(
     <div>
-      <h1>簡単メモアプリ</h1>
-      <CommentPush PushComment={PushComment}></CommentPush>
-      <CommentPush PushComment={PushComment}></CommentPush>
-      <CommentList comments={comments}></CommentList>
+      <h1>ワイワイプレゼンテーション</h1>
+      {
+        roomId === "" ? <RootLayout CreateRoom={()=>{}} SetRootID={SetRootID}/>:<RoomLayout/>        
+      }
     </div>
   )
 }
