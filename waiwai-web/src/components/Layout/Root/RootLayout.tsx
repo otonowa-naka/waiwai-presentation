@@ -1,7 +1,7 @@
 import { FC } from "react"
 import {useAppDispatch} from '../../../store'
 
-import { createNew, getRoom } from '../../../store/roomSlice'
+import { CreateRoom, getRoom } from '../../../store/roomSlice'
 
 import { SButton } from "../../Elements/SButton"
 import { SingleTextInput } from "../../Elements/SingleTextInput"
@@ -10,9 +10,9 @@ export const RootLayout:FC = ()=>{
 
   //　イベント定義
   const dispatch = useAppDispatch() 
-  const OnClick = ()=> {
+  const OnClick =　async ()=> {
     console.log("dispatch createNew　前")
-    dispatch(createNew())
+    await　dispatch(CreateRoom())
     console.log("dispatch createNew　後")
   }
   const OnInButtonClick = async (comment:string)=> {

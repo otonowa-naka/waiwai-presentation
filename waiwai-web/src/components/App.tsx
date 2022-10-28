@@ -6,7 +6,7 @@ import {useSelector} from '../store'
 
 export const App:FC = ()=>
 {
-  const roomID_redux = useSelector((state)=> state.roomID.roomId)
+  const roomID_redux = useSelector((state)=> state.room.id)
 
   return(
     <div>

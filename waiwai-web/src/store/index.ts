@@ -6,7 +6,7 @@ import roomIdReducer from './roomSlice';
 export const store = configureStore({
   reducer: {
     //　Sliceを追加した場合は、ここに追加していく
-    roomID: roomIdReducer
+    room: roomIdReducer
   },
 });
 

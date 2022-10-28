@@ -1,11 +1,12 @@
 
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { getDatabase, ref, push , get , child} from "firebase/database";
+import { getDatabase, ref, push , get, set, child} from "firebase/database";
 import { browserKey } from '../BrowserKey'
 
 //　Stateの型定義
 type State = {
- roomId: string               // 部屋ID
+ id: string                   // 部屋ID
+ title: string                // 部屋名
  adminUserKey:string          // 管理者のUserKety
  activeQuestionnaire:string   // 有効なアンケートID
 }
@@ -13,7 +14,8 @@ type State = {
 //　初期値
 const initialState:State = 
 {
-  roomId:"",
+  id:"",
+  title: "",                
   adminUserKey:"",
   activeQuestionnaire:""
 }
@@ -47,7 +49,7 @@ export const roomSlice = createSlice({
       //　部屋の作成に成功したら部屋キーを更新する
       if(typeof room.key === 'string')
       {
-        state.roomId = room.key;
+        state.id = room.key;
       }
     },
 
@@ -62,16 +64,54 @@ export const roomSlice = createSlice({
       {
         console.log("エラー")
       }
-      state.roomId = actton.payload;
+      state.id = actton.payload;
     },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getRoom.fulfilled, (state, action) => {
-        state.roomId = action.payload;
+        state.id = action.payload;
+    })
+
+    // Add reducers for additional action types here, and handle loading state as needed
+    builder.addCase(CreateRoom.fulfilled, (state, action) => {
+      state.title = action.payload.title;
+      state.id = action.payload.id;
+      
     })
   },
 });
+
+// First, create the thunk
+export const CreateRoom = createAsyncThunk(
+  'room/CreateRoom',
+  async () => {
+    
+    console.log("Call createNew")
+    //DBにセットする値を作成
+    const newRoom : db_Room = {
+      title : "Titleを入力してください",    
+      adminUserKey : browserKey, 
+      activeQuestionnaire : ""
+    }
+
+    const db = getDatabase();
+    const roomsRef = ref(db, 'rooms');
+    const room = push(roomsRef);
+
+    await set(room, newRoom)
+
+    //戻り値
+    const returnValue:State = 
+    {
+      id:"room.key",
+      ...newRoom
+    }
+
+    return returnValue
+  }
+)
+
 
 // First, create the thunk
 export const getRoom = createAsyncThunk<string, string>(
