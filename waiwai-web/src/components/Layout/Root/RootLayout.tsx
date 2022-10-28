@@ -1,7 +1,7 @@
 import { FC } from "react"
-import { useDispatch } from 'react-redux'
+import {useAppDispatch} from '../../../store'
 
-import { setId, createNew } from '../../../store/roomSlice'
+import { createNew, getRoom } from '../../../store/roomSlice'
 
 import { SButton } from "../../Elements/SButton"
 import { SingleTextInput } from "../../Elements/SingleTextInput"
@@ -9,14 +9,14 @@ import { SingleTextInput } from "../../Elements/SingleTextInput"
 export const RootLayout:FC = ()=>{
 
   //　イベント定義
-  const dispatch = useDispatch() 
+  const dispatch = useAppDispatch() 
   const OnClick = ()=> {
     console.log("dispatch createNew　前")
     dispatch(createNew())
     console.log("dispatch createNew　後")
   }
-  const OnInButtonClick = (comment:string)=> {
-    dispatch(setId(comment))
+  const OnInButtonClick = async (comment:string)=> {
+    await dispatch(getRoom(comment))
   } 
 
 

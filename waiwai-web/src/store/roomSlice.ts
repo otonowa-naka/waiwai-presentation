@@ -1,6 +1,6 @@
 
-import { createSlice, PayloadAction  } from '@reduxjs/toolkit';
-import { getDatabase, ref, push } from "firebase/database";
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { getDatabase, ref, push , get , child} from "firebase/database";
 import { browserKey } from '../BrowserKey'
 
 //　Stateの型定義
@@ -65,7 +65,37 @@ export const roomSlice = createSlice({
       state.roomId = actton.payload;
     },
   },
+  extraReducers: (builder) => {
+    // Add reducers for additional action types here, and handle loading state as needed
+    builder.addCase(getRoom.fulfilled, (state, action) => {
+        state.roomId = action.payload;
+    })
+  },
 });
+
+// First, create the thunk
+export const getRoom = createAsyncThunk<string, string>(
+  'room/get',
+  async (roomId: string) => {
+    const db = getDatabase();
+    const roomsRef = ref(db, 'rooms');
+    try
+    {
+      const snapshot = await get(child(roomsRef, roomId))
+      if (snapshot.exists()) {
+          console.log(snapshot.val());
+          return roomId;
+      } else {
+         console.log("No data available");
+      }
+ 
+    }catch(error)
+    {
+      console.error(error);
+    }
+    return "error"    
+  }
+)
 
 // アクションの外部定義
 export const { createNew, setId } = roomSlice.actions;
