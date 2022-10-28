@@ -5,6 +5,15 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store} from './store'
 
+//FireBase関連のImport
+import { firebaseConfig } from './firebaseConfig'
+import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
+
+// fireBaseの初期化処理
+export const firebaseApp = initializeApp(firebaseConfig);
+export const firebaseDb = getDatabase();
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

@@ -11,7 +11,9 @@ export const RootLayout:FC = ()=>{
   //　イベント定義
   const dispatch = useDispatch() 
   const OnClick = ()=> {
+    console.log("dispatch createNew　前")
     dispatch(createNew())
+    console.log("dispatch createNew　後")
   }
   const OnInButtonClick = (comment:string)=> {
     dispatch(setId(comment))
