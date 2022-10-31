@@ -10,6 +10,10 @@ describe('コンストラクタ', () => {
   test('21文字以上の文字列を渡すと例外を返す', () => {
     expect(() => new RoomId(正常系RoomID_A + "x")).toThrow()
   });
+
+  test('アスキー文字以外は受け付けないこと', () => {
+    expect(() => new RoomId('-NFSPEOht-AEycIAN2Wｱ')).toThrow()
+  });
 });
 
 describe('equals', () => {
