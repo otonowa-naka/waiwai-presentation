@@ -3,7 +3,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { getDatabase, ref, push , get, set, child} from "firebase/database";
 import { browserKey } from '../BrowserKey'
 
-//　Stateの型定義
+// Stateの型定義
 type State = {
  id: string                   // 部屋ID
  title: string                // 部屋名
@@ -11,7 +11,7 @@ type State = {
  activeQuestionnaire:string   // 有効なアンケートID
 }
 
-//　初期値
+// 初期値
 const initialState:State = 
 {
   id:"",
@@ -20,7 +20,7 @@ const initialState:State =
   activeQuestionnaire:""
 }
 
-//　RealTimeDB上のRoomノードの構造定義
+// RealTimeDB上のRoomノードの構造定義
 type db_Room = {
   title: string                // 部屋名
   adminUserKey:string          // 管理者のUserKety
@@ -32,7 +32,7 @@ export const roomSlice = createSlice({
   initialState,
   reducers: {
     
-    //　部屋を新規に作成
+    // 部屋を新規に作成
     createNew: (state:State) => {
 
       console.log("Call createNew")
@@ -46,14 +46,14 @@ export const roomSlice = createSlice({
       const db = getDatabase();
       const roomsRef = ref(db, 'rooms');
       const room = push(roomsRef, newRoom);
-      //　部屋の作成に成功したら部屋キーを更新する
+      // 部屋の作成に成功したら部屋キーを更新する
       if(typeof room.key === 'string')
       {
         state.id = room.key;
       }
     },
 
-    //　既存の部屋に入室　
+    // 既存の部屋に入室
     setId: (state:State, actton:PayloadAction<string>) => {
 
       const roomid = actton.payload
