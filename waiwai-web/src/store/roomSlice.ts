@@ -113,7 +113,7 @@ export const CreateRoom = createAsyncThunk(
 )
 
 
-// First, create the thunk
+// 非同期アクションの定義
 export const getRoom = createAsyncThunk<string, string>(
   'room/get',
   async (roomId: string) => {
