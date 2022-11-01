@@ -1,83 +1,82 @@
 
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { getDatabase, ref, push , get, set, child} from "firebase/database";
+import { getDatabase, ref, push, get, set, child } from "firebase/database";
 import { browserKey } from '../BrowserKey'
+import { RoomId } from './RoomId'
 
 // Stateの型定義
 type State = {
- id: string                   // 部屋ID
- title: string                // 部屋名
- adminUserKey:string          // 管理者のUserKety
- activeQuestionnaire:string   // 有効なアンケートID
+  id: RoomId                   // 部屋ID
+  title: string                // 部屋名
+  adminUserKey: string          // 管理者のUserKety
+  activeQuestionnaire: string   // 有効なアンケートID
 }
 
 // 初期値
-const initialState:State = 
+const initialState: State =
 {
-  id:"",
-  title: "",                
-  adminUserKey:"",
-  activeQuestionnaire:""
+  id: RoomId.buildEmpty(),
+  title: "",
+  adminUserKey: "",
+  activeQuestionnaire: ""
 }
 
 // RealTimeDB上のRoomノードの構造定義
 type db_Room = {
   title: string                // 部屋名
-  adminUserKey:string          // 管理者のUserKety
-  activeQuestionnaire:string   // 有効なアンケートID
- }
+  adminUserKey: string          // 管理者のUserKety
+  activeQuestionnaire: string   // 有効なアンケートID
+}
 
 export const roomSlice = createSlice({
   name: 'roomId',
   initialState,
   reducers: {
-    
+
     // 部屋を新規に作成
-    createNew: (state:State) => {
+    createNew: (state: State) => {
 
       console.log("Call createNew")
       //DBにセットする値を作成
-      const newRoom : db_Room = {
-        title : "Titleを入力してください",    
-        adminUserKey : browserKey, 
-        activeQuestionnaire : ""
+      const newRoom: db_Room = {
+        title: "Titleを入力してください",
+        adminUserKey: browserKey,
+        activeQuestionnaire: ""
       }
 
       const db = getDatabase();
       const roomsRef = ref(db, 'rooms');
       const room = push(roomsRef, newRoom);
       // 部屋の作成に成功したら部屋キーを更新する
-      if(typeof room.key === 'string')
-      {
-        state.id = room.key;
+      if (typeof room.key === 'string') {
+        state.id = RoomId.build(room.key);
       }
     },
 
     // 既存の部屋に入室
-    setId: (state:State, actton:PayloadAction<string>) => {
+    setId: (state: State, actton: PayloadAction<string>) => {
 
       const roomid = actton.payload
       const db = getDatabase();
       const roomsRef = ref(db, 'rooms/' + roomid);
 
-      if(roomsRef.isEqual(null))
-      {
+      if (roomsRef.isEqual(null)) {
         console.log("エラー")
       }
-      state.id = actton.payload;
+      state.id = RoomId.build(actton.payload);
     },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getRoom.fulfilled, (state, action) => {
-        state.id = action.payload;
+      state.id = RoomId.build(action.payload);
     })
 
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(CreateRoom.fulfilled, (state, action) => {
       state.title = action.payload.title;
       state.id = action.payload.id;
-      
+
     })
   },
 });
@@ -86,13 +85,13 @@ export const roomSlice = createSlice({
 export const CreateRoom = createAsyncThunk(
   'room/CreateRoom',
   async () => {
-    
+
     console.log("Call createNew")
     //DBにセットする値を作成
-    const newRoom : db_Room = {
-      title : "Titleを入力してください",    
-      adminUserKey : browserKey, 
-      activeQuestionnaire : ""
+    const newRoom: db_Room = {
+      title: "Titleを入力してください",
+      adminUserKey: browserKey,
+      activeQuestionnaire: ""
     }
 
     const db = getDatabase();
@@ -101,10 +100,14 @@ export const CreateRoom = createAsyncThunk(
 
     await set(room, newRoom)
 
+    let roomId = RoomId.buildEmpty()
+    if (typeof (room.key) === 'string') {
+      roomId = RoomId.build(room.key)
+    }
     //戻り値
-    const returnValue:State = 
+    const returnValue: State =
     {
-      id:"room.key",
+      id: roomId,
       ...newRoom
     }
 
@@ -119,21 +122,19 @@ export const getRoom = createAsyncThunk<string, string>(
   async (roomId: string) => {
     const db = getDatabase();
     const roomsRef = ref(db, 'rooms');
-    try
-    {
+    try {
       const snapshot = await get(child(roomsRef, roomId))
       if (snapshot.exists()) {
-          console.log(snapshot.val());
-          return roomId;
+        console.log(snapshot.val());
+        return roomId;
       } else {
-         console.log("No data available");
+        console.log("No data available");
       }
- 
-    }catch(error)
-    {
+
+    } catch (error) {
       console.error(error);
     }
-    return "error"    
+    return "error"
   }
 )
 
