@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { useSelector as rawUseSelector, TypedUseSelectorHook ,useDispatch } from 'react-redux';
+import { useSelector as rawUseSelector, TypedUseSelectorHook, useDispatch } from 'react-redux';
 
-import roomIdReducer from './roomSlice';
+import roomIdReducer from './room/reducer';
 
 export const store = configureStore({
   reducer: {

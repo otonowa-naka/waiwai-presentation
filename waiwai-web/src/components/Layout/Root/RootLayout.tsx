@@ -1,26 +1,25 @@
 import { FC } from "react"
-import {useAppDispatch} from '../../../store'
+import { useAppDispatch } from '../../../store'
 
-import { CreateRoom, getRoom } from '../../../store/roomSlice'
+import { CreateRoom, getRoom } from '../../../store/room/reducer'
 
 import { SButton } from "../../Elements/SButton"
 import { SingleTextInput } from "../../Elements/SingleTextInput"
 
-export const RootLayout:FC = ()=>{
+export const RootLayout: FC = () => {
 
-  //　イベント定義
-  const dispatch = useAppDispatch() 
-  const OnClick =　async ()=> {
+  //イベント定義
+  const dispatch = useAppDispatch()
+  const OnClick = async () => {
     console.log("dispatch createNew　前")
-    await　dispatch(CreateRoom())
+    await dispatch(CreateRoom())
     console.log("dispatch createNew　後")
   }
-  const OnInButtonClick = async (comment:string)=> {
+  const OnInButtonClick = async (comment: string) => {
     await dispatch(getRoom(comment))
-  } 
+  }
 
-
-  return(
+  return (
     <div>
       <p>ようこそ</p>
       <p>新たに部屋を作成する場合は、新規作成をクリックしてください。</p>
