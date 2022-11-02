@@ -2,11 +2,11 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { getDatabase, ref, push, get, set, child } from "firebase/database";
 import { browserKey } from '../BrowserKey'
-import { RoomId } from './RoomId'
+
 
 // Stateの型定義
 type State = {
-  id: RoomId                   // 部屋ID
+  id: string                   // 部屋ID
   title: string                // 部屋名
   adminUserKey: string          // 管理者のUserKety
   activeQuestionnaire: string   // 有効なアンケートID
@@ -15,7 +15,7 @@ type State = {
 // 初期値
 const initialState: State =
 {
-  id: RoomId.buildEmpty(),
+  id: "",
   title: "",
   adminUserKey: "",
   activeQuestionnaire: ""
@@ -48,8 +48,9 @@ export const roomSlice = createSlice({
       const roomsRef = ref(db, 'rooms');
       const room = push(roomsRef, newRoom);
       // 部屋の作成に成功したら部屋キーを更新する
+
       if (typeof room.key === 'string') {
-        state.id = RoomId.build(room.key);
+        state.id = room.key;
       }
     },
 
@@ -63,20 +64,19 @@ export const roomSlice = createSlice({
       if (roomsRef.isEqual(null)) {
         console.log("エラー")
       }
-      state.id = RoomId.build(actton.payload);
+      state.id = actton.payload;
     },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getRoom.fulfilled, (state, action) => {
-      state.id = RoomId.build(action.payload);
+      state.id = action.payload;
     })
 
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(CreateRoom.fulfilled, (state, action) => {
       state.title = action.payload.title;
       state.id = action.payload.id;
-
     })
   },
 });
@@ -100,9 +100,9 @@ export const CreateRoom = createAsyncThunk(
 
     await set(room, newRoom)
 
-    let roomId = RoomId.buildEmpty()
+    let roomId = ""
     if (typeof (room.key) === 'string') {
-      roomId = RoomId.build(room.key)
+      roomId = room.key
     }
     //戻り値
     const returnValue: State =
