@@ -1,7 +1,7 @@
 import { FC } from "react"
 import { useAppDispatch } from '../../../store'
 
-import { CreateRoom, getRoom } from '../../../store/room/reducer'
+import { CreateRoom, setRoomAction } from '../../../store/room/reducer'
 
 import { SButton } from "../../Elements/SButton"
 import { SingleTextInput } from "../../Elements/SingleTextInput"
@@ -15,8 +15,10 @@ export const RootLayout: FC = () => {
     await dispatch(CreateRoom())
     console.log("dispatch createNew　後")
   }
-  const OnInButtonClick = async (comment: string) => {
-    await dispatch(getRoom(comment))
+  const OnInButtonClick = (comment: string) => {
+    //setRoomAction(comment)
+    dispatch(setRoomAction(comment))
+    //await dispatch(getRoom(comment))
   }
 
   return (

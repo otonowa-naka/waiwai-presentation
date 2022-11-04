@@ -1,7 +1,9 @@
 
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getDatabase, ref, push, get, set, child } from "firebase/database";
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { getDatabase, ref, push, get, set, child, onValue } from "firebase/database";
 import { browserKey } from '../../BrowserKey'
+import { AppDispatch } from '../'
+
 
 
 // Stateの型定義
@@ -31,7 +33,15 @@ type db_Room = {
 export const roomSlice = createSlice({
   name: 'room',
   initialState,
-  reducers: {},
+  reducers: {
+    // 既存の部屋に入室
+    setRoom: (state: RoomState, actton: PayloadAction<RoomState>) => {
+
+      const room = actton.payload
+      state.id = room.id
+      state.title = room.title
+    }
+  },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getRoom.fulfilled, (state, action) => {
@@ -80,14 +90,35 @@ export const CreateRoom = createAsyncThunk(
   }
 )
 
+// -NFxULh4uJJZO4WnYMl4
+
+export function setRoomAction(roomId: string) {
+  return (dispatch: AppDispatch) => {
+
+    const db = getDatabase();
+    const starCountRef = ref(db, `rooms/${roomId}`);
+    onValue(starCountRef, (snapshot) => {
+      const newRoom = snapshot.val() as db_Room;
+      // 初期値
+      const newRoomState: RoomState =
+      {
+        id: roomId,
+        ...newRoom
+      }
+      dispatch(setRoom(newRoomState))
+    })
+  }
+
+}
+
 
 // 非同期アクションの定義
 export const getRoom = createAsyncThunk<string, string>(
   'room/get',
   async (roomId: string) => {
     const db = getDatabase();
-    const roomsRef = ref(db, 'rooms');
     try {
+      const roomsRef = ref(db, 'rooms');
       const snapshot = await get(child(roomsRef, roomId))
       if (snapshot.exists()) {
         console.log(snapshot.val());
@@ -104,4 +135,5 @@ export const getRoom = createAsyncThunk<string, string>(
 )
 
 // アクションの外部定義
-export default roomSlice.reducer;
+export const { setRoom } = roomSlice.actions;
+export default roomSlice.reducer
