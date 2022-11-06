@@ -4,8 +4,6 @@ import { getDatabase, ref, push, get, set, child, onValue } from "firebase/datab
 import { browserKey } from '../../BrowserKey'
 import { AppDispatch } from '../'
 
-
-
 // Stateの型定義
 export type RoomState = {
   id: string                   // 部屋ID
@@ -33,15 +31,18 @@ type db_Room = {
 export const roomSlice = createSlice({
   name: 'room',
   initialState,
+
   reducers: {
     // 既存の部屋に入室
     setRoom: (state: RoomState, actton: PayloadAction<RoomState>) => {
-
       const room = actton.payload
       state.id = room.id
       state.title = room.title
+      state.adminUserKey = room.adminUserKey
+      state.activeQuestionnaire = room.activeQuestionnaire
     }
   },
+
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(getRoom.fulfilled, (state, action) => {
@@ -94,7 +95,6 @@ export const CreateRoom = createAsyncThunk(
 
 export function setRoomAction(roomId: string) {
   return (dispatch: AppDispatch) => {
-
     const db = getDatabase();
     const starCountRef = ref(db, `rooms/${roomId}`);
     onValue(starCountRef, (snapshot) => {
@@ -108,9 +108,7 @@ export function setRoomAction(roomId: string) {
       dispatch(setRoom(newRoomState))
     })
   }
-
 }
-
 
 // 非同期アクションの定義
 export const getRoom = createAsyncThunk<string, string>(
