@@ -50,7 +50,7 @@ describe('roomSlice', () => {
         const firebaseDb = getDatabase();
 
         // Point to the RTDB emulator running on localhost.
-        connectDatabaseEmulator(firebaseDb, "localhost", 9000);
+       // connectDatabaseEmulator(firebaseDb, "localhost", 9000);
 
         const store2 = configureStore({
             reducer: {
