@@ -10,7 +10,12 @@ import { firebaseConfig } from '../../firebaseConfig'
 import { PayloadAction, configureStore } from '@reduxjs/toolkit';
 
 // テストではローカルのDBを利用するための環境変数設定
-process.env.FIREBASE_DATABASE_EMULATOR_HOST = 'localhost:9000';
+beforeAll(() => {
+    initializeApp(firebaseConfig)
+    const firebaseDb = getDatabase();
+
+    connectDatabaseEmulator(firebaseDb, "localhost", 9000);
+})
 
 describe('roomSlice', () => {
     test('CreateRoomが正常に完了した場合は、TitleとIDがセットされている', () => {
@@ -39,8 +44,8 @@ describe('roomSlice', () => {
         });
     */
     test('呼び出したときpenndingのみを返す2', async () => {
-        const firebaseApp = initializeApp(firebaseConfig)
-        const firebaseDb = getDatabase();
+        //        const firebaseApp = initializeApp(firebaseConfig)
+        //        const firebaseDb = getDatabase();
 
         // Point to the RTDB emulator running on localhost.
         // connectDatabaseEmulator(firebaseDb, "localhost", 9000);
