@@ -4,20 +4,13 @@ import { describe, expect, test } from '@jest/globals';
 
 import roomIdReducer from './reducer';
 import { roomSlice, CreateRoom, RoomState } from './reducer';
-import { store } from '..'
 import { initializeApp } from "firebase/app";
 import { getDatabase, connectDatabaseEmulator } from "firebase/database";
 import { firebaseConfig } from '../../firebaseConfig'
 import { PayloadAction, configureStore } from '@reduxjs/toolkit';
-/*
-const initialState: RoomState =
-{
-    id: "",
-    title: "",
-    adminUserKey: "",
-    activeQuestionnaire: ""
-}
-*/
+
+// テストではローカルのDBを利用するための環境変数設定
+process.env.FIREBASE_DATABASE_EMULATOR_HOST = 'localhost:9000';
 
 describe('roomSlice', () => {
     test('CreateRoomが正常に完了した場合は、TitleとIDがセットされている', () => {
@@ -50,7 +43,7 @@ describe('roomSlice', () => {
         const firebaseDb = getDatabase();
 
         // Point to the RTDB emulator running on localhost.
-       // connectDatabaseEmulator(firebaseDb, "localhost", 9000);
+        // connectDatabaseEmulator(firebaseDb, "localhost", 9000);
 
         const store2 = configureStore({
             reducer: {
