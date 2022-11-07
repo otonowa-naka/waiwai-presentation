@@ -17,8 +17,6 @@ jobs:
    
       - name: Run all the tests
         run: cd waiwai-web && npm ci && firebase emulators:exec 'npm run test'
-        env:
-          FIREBASE_DATABASE_EMULATOR_HOST: "localhost:9000"
   build_and_preview:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
