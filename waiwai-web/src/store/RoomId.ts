@@ -14,7 +14,7 @@ export class RoomId {
     }
 
     public static buildEmpty(): RoomId {
-        return new RoomId("")
+        return new RoomId('')
     }
 
     // 比較
@@ -23,6 +23,6 @@ export class RoomId {
     }
 
     public IsEmpty() {
-        return this.key === ""
+        return this.key === ''
     }
 }
