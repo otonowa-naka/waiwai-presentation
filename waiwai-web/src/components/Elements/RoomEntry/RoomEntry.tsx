@@ -2,17 +2,16 @@ import { FC, useState, ChangeEvent } from 'react'
 import { useAppDispatch } from '../../../store'
 import { setRoomAction } from '../../../store/room/reducer'
 
+
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import InputGroup from 'react-bootstrap/InputGroup'
 
 
 export const RoomEntry: FC = () => {
   // bootstrapのStylesheetの読み込み
   //イベント定義
   const dispatch = useAppDispatch()
-
-  const OnEntryClick = async () => {
+  const OnNyusituClick = async () => {
     await dispatch(setRoomAction(roomId))
   }
 
@@ -21,8 +20,8 @@ export const RoomEntry: FC = () => {
   const [roomIdInvalid, setRoomIdInvalid] = useState(true)
 
   return (
-    <div>
-      <InputGroup hasValidation>
+    <Form>
+      <Form.Group className="mb-3">
         <Form.Label>部屋番号</Form.Label>
         <Form.Control
           type="roomId"
@@ -40,10 +39,10 @@ export const RoomEntry: FC = () => {
         <Form.Text className="text-muted">
           例:-aas1a32s13ad5a1df
         </Form.Text>
-      </InputGroup>
-      <Button data-testid="roomEnter" variant="outline-primary" onClick={OnEntryClick} disabled={roomIdInvalid} >
+      </Form.Group >
+      <Button data-testid="roomEnter" variant="outline-primary" onClick={OnNyusituClick} disabled={roomIdInvalid} >
         入室
       </Button>
-    </div>
+    </Form>
   )
 }

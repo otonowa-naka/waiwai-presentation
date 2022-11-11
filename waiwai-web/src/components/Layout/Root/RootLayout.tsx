@@ -1,10 +1,10 @@
-import { FC } from "react"
+import { FC } from 'react'
 import { useAppDispatch, useSelector } from '../../../store'
 import { ActionCreateRoom } from '../../../store/room/reducer'
-import { RoomEntry } from "../../Elements/RoomEntry/RoomEntry"
+import { RoomEntry } from '../../Elements/RoomEntry/RoomEntry'
 
-import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button'
+import Alert from 'react-bootstrap/Alert'
 
 export const RootLayout: FC = () => {
   // bootstrapのStylesheetの読み込み
@@ -24,7 +24,7 @@ export const RootLayout: FC = () => {
       <p>部屋IDをご存じの場合は、部屋IDを入力して入室を押してください。</p>
       <RoomEntry />
       {
-        errorMessage !== "" && <Alert variant='warning'> {errorMessage}</Alert>
+        errorMessage !== '' && <Alert variant='warning'> {errorMessage}</Alert>
       }
     </div>
   )

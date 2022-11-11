@@ -19,7 +19,8 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "react-app",
-    "react-app/jest"
+    "react-app/jest",
+    "plugin:storybook/recommended"
   ],
   "plugins": [
     "@typescript-eslint"

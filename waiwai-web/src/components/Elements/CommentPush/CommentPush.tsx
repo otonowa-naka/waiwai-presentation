@@ -13,7 +13,7 @@ export const CommentPush: FC<Porps> = (props) => {
     const { PushComment } = props
 
     // 送信コメント State
-    const [text, setText] = useState<string>("")
+    const [text, setText] = useState<string>('')
 
     // テキストボックス入力時に入力内容をStateに保存
     const OnChangeText = (e: ChangeEvent<HTMLInputElement>) => setText(e.target.value)
@@ -21,7 +21,7 @@ export const CommentPush: FC<Porps> = (props) => {
     // 送信ボタンクリック
     const OnClickAdd = () => {
         PushComment(text)
-        setText("")
+        setText('')
     }
 
     return (

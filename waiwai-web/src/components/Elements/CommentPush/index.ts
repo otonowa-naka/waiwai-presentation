@@ -1,1 +1,1 @@
-export * from './CommentPush';
+export * from './CommentPush'
