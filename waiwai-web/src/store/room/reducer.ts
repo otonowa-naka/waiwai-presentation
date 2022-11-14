@@ -124,6 +124,15 @@ export function ActionCreateRoom() {
       roomId = room.key
     }
 
+    // ↓ここいる？
+    const newRoom2: Room =
+    {
+      id: roomId,
+      ...newRoom
+    }
+    dispatch(setRoom(newRoom2))
+    // ↑ここまで
+
     onValue(room, (snapshot) => {
       const dbRoom = snapshot.val() as db_Room
       // 初期値
@@ -139,19 +148,25 @@ export function ActionCreateRoom() {
 // アクションの外部定義
 export const { setRoom, setError } = roomSlice.actions
 export default roomSlice.reducer
-  /*
+/*
+export const useRoomId = (): RoomId => {
+  const roomid = useSelector((state) => state.room.room.id)
+  return new RoomId(roomid)
+}
+*/
+/*
 extraReducers: (builder) => {
 // Add reducers for additional action types here, and handle loading state as needed
 builder.addCase(getRoom.fulfilled, (state, action) => {
-  state.id = action.payload
+state.id = action.payload
 })
  
 // Add reducers for additional action types here, and handle loading state as needed
 builder.addCase(CreateRoom.fulfilled, (state, action) => {
-  state.title = action.payload.title
-  state.id = action.payload.id
-  state.adminUserKey = action.payload.adminUserKey
-  state.activeQuestionnaire = action.payload.activeQuestionnaire
+state.title = action.payload.title
+state.id = action.payload.id
+state.adminUserKey = action.payload.adminUserKey
+state.activeQuestionnaire = action.payload.activeQuestionnaire
 })
 },*/
 

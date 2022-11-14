@@ -40,6 +40,8 @@ describe('roomSlice', () => {
     beforeEach(async () => {
         const firebaseDb = getDatabase()
         await set(ref(firebaseDb), null)
+
+        //        await set(ref(firebaseDb, 'rooms'), null)
         unscribe = () => {/* do nothing.*/ }
     })
 
@@ -91,6 +93,7 @@ describe('roomSlice', () => {
             })
 
             store.dispatch(setRoomAction(roomid))
+                .then(() => { console.log('aaaa') })
                 .catch((error) => { throw error })
         })
     })

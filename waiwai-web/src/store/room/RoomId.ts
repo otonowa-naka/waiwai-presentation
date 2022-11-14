@@ -1,6 +1,6 @@
 
 export class RoomId {
-    private constructor(private key: string) { }
+    public constructor(private key: string) { }
 
     public static build(key: string): RoomId {
         if (key.length !== 20) {
