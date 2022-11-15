@@ -8,10 +8,11 @@ import thunk from 'redux-thunk'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, connectDatabaseEmulator, ref, set } from 'firebase/database'
 import { firebaseConfig } from '../../firebaseConfig'
-import { AppDispatch, store } from '..'
+import { AppDispatch } from '..'
 import { PayloadAction, Unsubscribe } from '@reduxjs/toolkit'
 import { OpenCommentsAction, PushCommentAction } from './Actions'
 import { CommentItem, CommentsState } from './Slice'
+import { RoomId } from '../room/RoomId'
 
 
 const mockStoreCreater = configureMockStore<CommentsState, AppDispatch>([thunk])
@@ -29,6 +30,7 @@ const initialState: CommentsState =
     }
 }
 
+const restRoomID = new RoomId('0'.repeat(20))
 // テストではローカルのDBを利用するための環境変数設定
 beforeAll(() => {
     initializeApp(firebaseConfig)
@@ -61,37 +63,9 @@ describe('CommentsActions', () => {
                     done()
                 }
             })
-            mockStore.dispatch(OpenCommentsAction('0'.repeat(20)))
-            mockStore.dispatch(PushCommentAction('0'.repeat(20), '最初のコメント'))
+            mockStore.dispatch(OpenCommentsAction(restRoomID))
+            mockStore.dispatch(PushCommentAction(restRoomID, '最初のコメント'))
                 .catch((error) => { throw error })
         })
-
-        /*
-        test('PushCommentActionアクションを実行するとコメントが登録される22', (done) => {
-
-            try {
-                store.dispatch(ActionCreateRoom())
-                    .then(() => {
-                        store.dispatch(OpenCommentsAction(store.getState().roomState.room.id))
-                        unscribe = store.subscribe(() => {
-                            try {
-                                const commentsState = store.getState().commentsState
-                                // eslint-disable-next-line jest/no-conditional-expect
-                                expect(commentsState.content.comments[0].comment).toEqual('最初のコメント')
-                                done()
-                            } catch {
-                                done(new Error(''))
-                            }
-                        })
-                        store.dispatch(PushCommentAction2('最初のコメント'))
-                            .catch((error) => { done(new Error('')) })
-                    })
-                    .catch((err) => { done(new Error('')) })
-            } catch
-            {
-                done(new Error(''))
-            }
-        })
-        */
     })
 })

@@ -1,27 +1,24 @@
 import { getDatabase, ref, push, set, onChildAdded, DataSnapshot, Unsubscribe } from 'firebase/database'
 import { AppDispatch } from '..'
+import { RoomId } from '../room/RoomId'
 import { CommentItem, commentsSlice, setError } from './Slice'
 
 let onChildAddedUnscribe: Unsubscribe = () => void {}
 
 // 部屋IDで指定
-export function OpenCommentsAction(roomId: string) {
+export function OpenCommentsAction(roomId: RoomId) {
     return (dispatch: AppDispatch) => {
         try {
-            if (roomId.length !== 20) {
-                throw new RangeError('文字通が20文字ではありません。')
-            }
-
-            if (roomId.match(/^[!-~]{20}$/) == null) {
-                throw new RangeError('アスキー文字以外が入力させました。')
-            }
-
-            const db = getDatabase()
-            const starCountRef = ref(db, `commentRooms/${roomId}`)
 
             // 前回のListener監視を解除
             onChildAddedUnscribe()
             dispatch(commentsSlice.actions.ClearComments())
+
+            if (roomId.IsEmpty()) {
+                return
+            }
+            const db = getDatabase()
+            const starCountRef = ref(db, `commentRooms/${roomId.Id()}`)
 
             onChildAddedUnscribe = onChildAdded(starCountRef, (data: DataSnapshot) => {
                 const item = data.val() as CommentItem
@@ -37,11 +34,11 @@ export function OpenCommentsAction(roomId: string) {
     }
 }
 // 部屋IDで指定
-export function PushCommentAction(roomId: string, commnet: string) {
+export function PushCommentAction(roomId: RoomId, commnet: string) {
     return async (dispatch: AppDispatch) => {
         try {
             const db = getDatabase()
-            const postListRef = ref(db, `commentRooms/${roomId}`)
+            const postListRef = ref(db, `commentRooms/${roomId.Id()}`)
             const newPostRef = push(postListRef)
             const db_item: CommentItem = {
                 comment: commnet

@@ -1,38 +1,17 @@
-import {FC} from 'react'
-import styled from 'styled-components'
+import { FC } from 'react'
+import { useSelector } from '../../../store'
+import ListGroup from 'react-bootstrap/ListGroup'
 
-// コメント一覧表示コンポーネント
-type Props = 
-{
-    comments:string[]   // コメント一覧
-}
-
-export const CommentList:FC<Props> = (propos)=>
-{
-    const {comments} = propos
+export const CommentList: FC = (propos) => {
+    const commentList = useSelector((state) => state.commentsState.content.comments)
 
     return (
-        <SContainer>
-        <p>コメント一覧</p>
-        <ul>
-        {comments.map( (comment, index) => (
-            <li key={comment}>
-            <SMemoWrapper>
-                <p>{comment}</p>
-            </SMemoWrapper>
-            </li>
-        ))}
-        </ul>
-        </SContainer>
+        <ListGroup variant="flush">
+            {commentList.map((item, index) => (
+                <ListGroup.Item key={item.comment}>
+                    {item.comment}
+                </ListGroup.Item>
+            ))}
+        </ListGroup>
     )
 }
-
-const SContainer = styled.div`
-border: solid 1px # ccc;
-padding: 16px;
-margin: 8px;
-`
-const SMemoWrapper = styled.div`
-display: flex;
-align-items: center;
-`

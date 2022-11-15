@@ -1,15 +1,16 @@
 import { FC } from 'react'
 import { useAppDispatch, useSelector } from '../../../store'
-import { ActionCreateRoom } from '../../../store/room/Slice'
+import { ActionCreateRoom } from '../../../store/room/Actions'
 import { RoomEntry } from '../../Elements/RoomEntry/RoomEntry'
 
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
 
 export const RootLayout: FC = () => {
-  // bootstrapのStylesheetの読み込み
-  //イベント定義
+
   const dispatch = useAppDispatch()
+
+  //イベント定義
   const OnClick = async () => {
     await dispatch(ActionCreateRoom())
   }

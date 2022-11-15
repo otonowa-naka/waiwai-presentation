@@ -1,6 +1,6 @@
 import { FC, useState, ChangeEvent } from 'react'
 import { useAppDispatch } from '../../../store'
-import { setRoomAction } from '../../../store/room/Slice'
+import { setRoomAction } from '../../../store/room/Actions'
 
 
 import Button from 'react-bootstrap/Button'

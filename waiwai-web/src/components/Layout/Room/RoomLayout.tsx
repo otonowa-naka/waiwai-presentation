@@ -1,21 +1,22 @@
 import { FC } from 'react'
 import { CommentList } from '../../Elements/CommentList'
-import { useComments } from '../../../hooks/useComments'
 import { CommentPush } from '../../Elements/CommentPush'
 import { useSelector } from '../../../store'
+import { RoomId } from '../../../store/room/RoomId'
 
-
-export const RoomLayout: FC = () => {
-  // コメント一覧
-  const { comments, PushComment } = useComments()
+type Porps =
+  {
+    roomId: RoomId
+  }
+export const RoomLayout: FC<Porps> = (porps) => {
+  const { roomId } = porps
 
   const title = useSelector((state) => state.roomState.room.title)
-
   return (
     <div>
       <h1>{title}</h1>
-      <CommentPush PushComment={PushComment}></CommentPush>
-      <CommentList comments={comments}></CommentList>
-    </div>
+      <CommentPush roomId={roomId}></CommentPush>
+      <CommentList></CommentList>
+    </div >
   )
 }

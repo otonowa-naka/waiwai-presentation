@@ -25,4 +25,8 @@ export class RoomId {
     public IsEmpty() {
         return this.key === ''
     }
+
+    public Id() {
+        return this.key
+    }
 }
