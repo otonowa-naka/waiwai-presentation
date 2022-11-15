@@ -2,14 +2,14 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { App } from './App'
 import { configureStore } from '@reduxjs/toolkit'
-import roomIdReducer from '../store/room/reducer'
+import roomIdReducer from '../store/room/Slice'
 import { Provider } from 'react-redux'
 
 test('renders learn react link', () => {
   const store = configureStore({
     reducer:
     {
-      room: roomIdReducer
+      roomState: roomIdReducer
     }
   })
 

@@ -5,7 +5,7 @@ import { RoomLayout } from './Layout/Room/RoomLayout'
 import { useSelector } from '../store'
 
 export const App: FC = () => {
-  const roomID_redux = useSelector((state) => state.room.room.id)
+  const roomID_redux = useSelector((state) => state.roomState.room.id)
 
   return (
     <div>

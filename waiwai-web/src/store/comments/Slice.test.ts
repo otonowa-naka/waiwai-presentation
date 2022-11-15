@@ -8,7 +8,7 @@ import { firebaseConfig } from '../../firebaseConfig'
 import { store } from '../'
 import { Unsubscribe } from '@reduxjs/toolkit'
 import { OpenCommentsAction, PushCommentAction, PushCommentAction2 } from './Operation'
-import { ActionCreateRoom } from '../room/reducer'
+import { ActionCreateRoom } from '../room/Actions'
 
 // テストではローカルのDBを利用するための環境変数設定
 beforeAll(() => {
@@ -66,7 +66,7 @@ describe('commentsSlice', () => {
         try {
             store.dispatch(ActionCreateRoom())
                 .then(() => {
-                    store.dispatch(OpenCommentsAction(store.getState().room.room.id))
+                    store.dispatch(OpenCommentsAction(store.getState().roomState.room.id))
                     unscribe = store.subscribe(() => {
                         try {
                             const commentsState = store.getState().commentsState

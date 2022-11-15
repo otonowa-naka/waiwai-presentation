@@ -64,7 +64,7 @@ export function PushCommentAction(roomId: string, commnet: string) {
 export function PushCommentAction2(commnet: string) {
     return async (dispatch: AppDispatch) => {
         try {
-            const roomId = store.getState().room.room.id
+            const roomId = store.getState().roomState.room.id
 
             const db = getDatabase()
             const postListRef = ref(db, `commentRooms/${roomId}`)

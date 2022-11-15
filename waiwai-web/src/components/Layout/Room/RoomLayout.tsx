@@ -9,7 +9,7 @@ export const RoomLayout: FC = () => {
   // コメント一覧
   const { comments, PushComment } = useComments()
 
-  const title = useSelector((state) => state.room.room.title)
+  const title = useSelector((state) => state.roomState.room.title)
 
   return (
     <div>

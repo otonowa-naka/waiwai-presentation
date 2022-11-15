@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { useSelector as rawUseSelector, TypedUseSelectorHook, useDispatch } from 'react-redux'
 
-import roomIdReducer from './room/reducer'
+import roomIdReducer from './room/Slice'
 import commentsReducer from './comments/Slice'
 
 export const store = configureStore({
   reducer: {
     // Sliceを追加した場合は、ここに追加していく
-    room: roomIdReducer,
+    roomState: roomIdReducer,
     commentsState: commentsReducer
   },
 })

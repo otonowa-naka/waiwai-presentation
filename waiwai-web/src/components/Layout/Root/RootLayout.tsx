@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { useAppDispatch, useSelector } from '../../../store'
-import { ActionCreateRoom } from '../../../store/room/reducer'
+import { ActionCreateRoom } from '../../../store/room/Slice'
 import { RoomEntry } from '../../Elements/RoomEntry/RoomEntry'
 
 import Button from 'react-bootstrap/Button'
@@ -14,7 +14,7 @@ export const RootLayout: FC = () => {
     await dispatch(ActionCreateRoom())
   }
 
-  const errorMessage = useSelector((state) => state.room.state.errorMessage)
+  const errorMessage = useSelector((state) => state.roomState.state.errorMessage)
 
   return (
     <div>

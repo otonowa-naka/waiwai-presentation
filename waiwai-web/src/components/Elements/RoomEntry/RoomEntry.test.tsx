@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { RoomEntry } from './RoomEntry'
 import { configureStore } from '@reduxjs/toolkit'
-import roomIdReducer from '../../../store/room/reducer'
+import roomIdReducer from '../../../store/room/Slice'
 import { Provider } from 'react-redux'
 import userEvent from '@testing-library/user-event'
 

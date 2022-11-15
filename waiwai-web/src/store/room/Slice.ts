@@ -1,8 +1,5 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { getDatabase, ref, push, get, set, child, onValue } from 'firebase/database'
-import { browserKey } from '../../BrowserKey'
-import { AppDispatch } from '../'
 
 export type Room = {
   id: string                   // 部屋ID
@@ -37,7 +34,7 @@ const initialState: RoomState =
 }
 
 // RealTimeDB上のRoomノードの構造定義
-type db_Room = {
+export type db_Room = {
   title: string                // 部屋名
   adminUserKey: string          // 管理者のUserKety
   activeQuestionnaire: string   // 有効なアンケートID
@@ -60,111 +57,6 @@ export const roomSlice = createSlice({
   },
 })
 
-// 部屋IDで指定
-export function setRoomAction(roomId: string) {
-  return async (dispatch: AppDispatch) => {
-    try {
-      if (roomId.length !== 20) {
-        throw new RangeError('文字通が20文字ではありません。')
-      }
-
-      if (roomId.match(/^[!-~]{20}$/) == null) {
-        throw new RangeError('アスキー文字以外が入力させました。')
-      }
-
-      const db = getDatabase()
-      const roomRef = ref(db, 'rooms')
-
-      const snapshot = await get(child(roomRef, roomId))
-      if (snapshot.exists()) {
-        console.log(snapshot.val())
-      } else {
-        throw new Error('指定の部屋IDは存在しません。')
-      }
-
-      const starCountRef = ref(db, `rooms/${roomId}`)
-      onValue(starCountRef, (snapshot) => {
-        const dbRoom = snapshot.val() as db_Room
-        // 初期値
-        const newRoom: Room =
-        {
-          id: roomId,
-          ...dbRoom
-        }
-        dispatch(setRoom(newRoom))
-      })
-    } catch (err) {
-      if (err instanceof Error) {
-        dispatch(setError(err.message))
-      } else {
-        dispatch(setError('例外が発生しました'))
-      }
-    }
-  }
-}
-
-export const fetchAdviceAsync = () => {
-  return async (dispatch: AppDispatch, getState: () => RoomState) => {
-    try {
-      // ↓ここいる？
-      const initialState: Room =
-      {
-
-        id: '',
-        title: '',
-        adminUserKey: '',
-        activeQuestionnaire: ''
-      }
-      dispatch(setRoom(initialState))
-    } catch {
-      //勇者よ，忘れず例外処理をやるのです
-      //例外通知用の同期Actionを作るのもオススメです
-    }
-  }
-}
-
-export function ActionCreateRoom() {
-  return async (dispatch: AppDispatch) => {
-    console.log('Call createNew')
-    //DBにセットする値を作成
-    const newRoom: db_Room = {
-      title: 'Titleを入力してください',
-      adminUserKey: browserKey,
-      activeQuestionnaire: ''
-    }
-
-    const db = getDatabase()
-    const roomsRef = ref(db, 'rooms')
-    const room = push(roomsRef)
-
-    await set(room, newRoom)
-
-    let roomId = ''
-    if (typeof (room.key) === 'string') {
-      roomId = room.key
-    }
-
-    // ↓ここいる？
-    const newRoom2: Room =
-    {
-      id: roomId,
-      ...newRoom
-    }
-    dispatch(setRoom(newRoom2))
-    // ↑ここまで
-
-    onValue(room, (snapshot) => {
-      const dbRoom = snapshot.val() as db_Room
-      // 初期値
-      const newRoom: Room =
-      {
-        id: roomId,
-        ...dbRoom
-      }
-      dispatch(setRoom(newRoom))
-    })
-  }
-}
 // アクションの外部定義
 export const { setRoom, setError } = roomSlice.actions
 export default roomSlice.reducer
