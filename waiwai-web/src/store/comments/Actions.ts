@@ -1,6 +1,5 @@
 import { getDatabase, ref, push, set, onChildAdded, DataSnapshot, Unsubscribe } from 'firebase/database'
 import { AppDispatch } from '..'
-import { store } from '..'
 import { CommentItem, commentsSlice, setError } from './Slice'
 
 let onChildAddedUnscribe: Unsubscribe = () => void {}
@@ -59,7 +58,7 @@ export function PushCommentAction(roomId: string, commnet: string) {
         }
     }
 }
-
+/*
 // 部屋IDで指定
 export function PushCommentAction2(commnet: string) {
     return async (dispatch: AppDispatch) => {
@@ -84,3 +83,4 @@ export function PushCommentAction2(commnet: string) {
         }
     }
 }
+*/

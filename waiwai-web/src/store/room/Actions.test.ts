@@ -7,7 +7,7 @@ import thunk from 'redux-thunk'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, connectDatabaseEmulator, ref, set } from 'firebase/database'
 
-import { AppDispatch, store } from '..'
+import { AppDispatch } from '..'
 import { firebaseConfig } from '../../firebaseConfig'
 import { browserKey } from '../../BrowserKey'
 import { Room, RoomState } from './Slice'
