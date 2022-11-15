@@ -103,6 +103,26 @@ export function setRoomAction(roomId: string) {
   }
 }
 
+export const fetchAdviceAsync = () => {
+  return async (dispatch: AppDispatch, getState: () => RoomState) => {
+    try {
+      // ↓ここいる？
+      const initialState: Room =
+      {
+
+        id: '',
+        title: '',
+        adminUserKey: '',
+        activeQuestionnaire: ''
+      }
+      dispatch(setRoom(initialState))
+    } catch {
+      //勇者よ，忘れず例外処理をやるのです
+      //例外通知用の同期Actionを作るのもオススメです
+    }
+  }
+}
+
 export function ActionCreateRoom() {
   return async (dispatch: AppDispatch) => {
     console.log('Call createNew')

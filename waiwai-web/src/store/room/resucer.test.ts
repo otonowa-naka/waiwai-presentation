@@ -1,14 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 
 import { describe, expect, test } from '@jest/globals'
 
-import { ActionCreateRoom, setRoomAction } from './reducer'
+import { ActionCreateRoom, Room, RoomState, setRoomAction } from './reducer'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, connectDatabaseEmulator, ref, set } from 'firebase/database'
 import { firebaseConfig } from '../../firebaseConfig'
 import { browserKey } from '../../BrowserKey'
-import { store } from '../'
+import { AppDispatch, store } from '../'
 import { Unsubscribe } from '@reduxjs/toolkit'
+import configureMockStore from 'redux-mock-store'
+import thunk from 'redux-thunk'
 
 // テストではローカルのDBを利用するための環境変数設定
 beforeAll(() => {
@@ -19,20 +22,44 @@ beforeAll(() => {
 })
 
 describe('roomSlice', () => {
-    /*
-    test('CreateRoomが正常に完了した場合は、TitleとIDがセットされている', () => {
-        const action = {
-            type: CreateRoom.fulfilled.type,
-            payload: {
-                title: "テスト",
-                id: "iddayo"
+
+
+
+    test('CreateRoomアクションを実行すると新規Roomを作成するMock版', async () => {
+
+        const initialState: RoomState =
+        {
+            state:
+            {
+                running: false,
+                errorMessage: ''
+            },
+            room: {
+                id: '',
+                title: '',
+                adminUserKey: '',
+                activeQuestionnaire: ''
             }
         }
-        const state = roomSlice.reducer(undefined, action)
-        expect(state.title).toEqual("テスト")
-        expect(state.id).toEqual("iddayo")
+
+        const mockStore = configureMockStore<RoomState, AppDispatch>([thunk])
+        const store2 = mockStore(initialState)
+
+        await store2.dispatch(ActionCreateRoom())
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        const romm = store2.getActions()[0].payload as Room
+
+        expect(romm.title).toEqual('Titleを入力してください')
+        /*
+        expect(act).toEqual({
+            payload: {
+                message: 'mocked',
+            },
+            type: 'FETCH_ADVICE',
+        })*/
+
     })
-    */
 
     // ストアの評価にサブスクライブを利用した時の初期化処理のために必要
     let unscribe: Unsubscribe = () => {/* do nothing.*/ }
