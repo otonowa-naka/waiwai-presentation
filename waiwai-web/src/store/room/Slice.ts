@@ -6,12 +6,16 @@ export type Room = {
   title: string                // 部屋名
   adminUserKey: string          // 管理者のUserKety
   activeQuestionnaire: string   // 有効なアンケートID
+  stamp: StampItem[]
+}
+export type StampItem = {
+  id: string
+  comment: string
 }
 
 // Stateの型定義
 export type RoomState = {
   state: {
-    running: boolean
     errorMessage: string
   }
   room: Room
@@ -22,14 +26,14 @@ const initialState: RoomState =
 {
   state:
   {
-    running: false,
     errorMessage: ''
   },
   room: {
     id: '',
     title: '',
     adminUserKey: '',
-    activeQuestionnaire: ''
+    activeQuestionnaire: '',
+    stamp: []
   }
 }
 
@@ -38,6 +42,7 @@ export type db_Room = {
   title: string                // 部屋名
   adminUserKey: string          // 管理者のUserKety
   activeQuestionnaire: string   // 有効なアンケートID
+  stamp: StampItem[]               // コメントスタンプ文字列
 }
 
 export const roomSlice = createSlice({
@@ -50,6 +55,9 @@ export const roomSlice = createSlice({
       const room = actton.payload
       state.room = room
     },
+    setRoomTitle: (state: RoomState, actton: PayloadAction<string>) => {
+      state.room.title = actton.payload
+    },
     setError: (state: RoomState, actton: PayloadAction<string>) => {
       console.log(`エラー発生 ${actton.payload}`)
       state.state.errorMessage = actton.payload
@@ -58,7 +66,7 @@ export const roomSlice = createSlice({
 })
 
 // アクションの外部定義
-export const { setRoom, setError } = roomSlice.actions
+export const { setRoom, setError, setRoomTitle } = roomSlice.actions
 export default roomSlice.reducer
 /*
 export const useRoomId = (): RoomId => {

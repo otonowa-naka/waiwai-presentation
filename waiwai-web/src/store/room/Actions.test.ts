@@ -11,7 +11,8 @@ import { AppDispatch } from '..'
 import { firebaseConfig } from '../../firebaseConfig'
 import { browserKey } from '../../BrowserKey'
 import { Room, RoomState } from './Slice'
-import { ActionCreateRoom, setRoomAction } from './Actions'
+import { ActionCreateRoom, ActionUpdateStamp, ActionUpdateTitle, setRoomAction } from './Actions'
+import { RoomId } from './RoomId'
 
 // テストではローカルのDBを利用するための環境変数設定
 beforeAll(() => {
@@ -27,14 +28,14 @@ const initialState: RoomState =
 {
     state:
     {
-        running: false,
         errorMessage: ''
     },
     room: {
         id: '',
         title: '',
         adminUserKey: '',
-        activeQuestionnaire: ''
+        activeQuestionnaire: '',
+        stamp: [{ id: '1', comment: 'いいね' }, { id: '2', comment: 'なるほど' }, { id: '2', comment: '88888' }]
     }
 }
 
@@ -62,6 +63,9 @@ describe('roomSlice', () => {
                     expect(act.payload.activeQuestionnaire.length).toEqual(0)
                     expect(act.payload.adminUserKey).toEqual(browserKey)
                     expect(act.payload.title).toEqual('Titleを入力してください')
+                    expect(act.payload.stamp[0].comment).toEqual('いいね')
+                    expect(act.payload.stamp[1].comment).toEqual('なるほど')
+                    expect(act.payload.stamp[2].comment).toEqual('88888')
                     done()
                 })
                 await mockStore.dispatch(ActionCreateRoom())
@@ -75,12 +79,13 @@ describe('roomSlice', () => {
         test('既存のRoomが存在した場合はsetRoomActionにRoom情報をセットする', (done) => {
             const asyncTest = async () => {
                 // テスト準備-事前にDBにテスト用の部屋を作成
-                const roomid = '-NFxULh4uJJZO4WnYMl4'
+                const roomid = new RoomId('-NFxULh4uJJZO4WnYMl4')
                 const db = getDatabase()
-                await set(ref(db, `rooms/${roomid}`), {
+                await set(ref(db, `rooms/${roomid.Id()}`), {
                     title: 'テストタイトル',
                     adminUserKey: 'Test ID',
-                    activeQuestionnaire: 'テスト質問'
+                    activeQuestionnaire: 'テスト質問',
+                    stamp: ['1', '2', '3']
                 })
                 const mockStore = mockStoreCreater(initialState)
                 mockStore.subscribe(() => {
@@ -88,6 +93,7 @@ describe('roomSlice', () => {
                     expect(act.payload.title).toEqual('テストタイトル')
                     expect(act.payload.adminUserKey).toEqual('Test ID')
                     expect(act.payload.activeQuestionnaire).toEqual('テスト質問')
+                    expect(act.payload.stamp).toEqual(['1', '2', '3'])
                     done()
                 })
                 await mockStore.dispatch(setRoomAction(roomid))
@@ -101,7 +107,7 @@ describe('roomSlice', () => {
         test('存在しないRoomを開くとsetErrorにエラーメッセージをセットする', (done) => {
             const asyncTest = async () => {
                 // テスト準備-事前にDBにテスト用の部屋を作成
-                const roomid = '-NFxULh4uJJZO4WnYMl4'
+                const roomid = new RoomId('-NFxULh4uJJZO4WnYMl4')
 
                 const mockStore = mockStoreCreater(initialState)
                 mockStore.subscribe(() => {
@@ -115,6 +121,69 @@ describe('roomSlice', () => {
 
             asyncTest()
                 .catch((error) => { throw error })
+        })
+    })
+
+    describe('ActionUpdateStamp', () => {
+        test('セットされたスタンプで上書きできる', (done) => {
+
+            const asyncTest = async () => {
+
+                const roomid = new RoomId('-NFxULh4uJJZO4WnYMl4')
+                const db = getDatabase()
+                await set(ref(db, `rooms/${roomid.Id()}`), {
+                    title: 'テストタイトル',
+                    adminUserKey: 'Test ID',
+                    activeQuestionnaire: 'テスト質問',
+                    stamp: [{ id: '1', comment: 'いいね' }, { id: '2', comment: 'なるほど' }, { id: '2', comment: '88888' }]
+                })
+
+                const mockStore = mockStoreCreater(initialState)
+
+                mockStore.subscribe(() => {
+                    if (mockStore.getActions().length > 1) {
+                        const act = mockStore.getActions()[1] as PayloadAction<Room>
+                        expect(act.payload.stamp).toEqual([{ id: '1', comment: 'aa' }, { id: '2', comment: 'bb' }])
+                        done()
+                    }
+                })
+                await mockStore.dispatch(setRoomAction(roomid))
+                await mockStore.dispatch(ActionUpdateStamp(roomid, [{ id: '1', comment: 'aa' }, { id: '2', comment: 'bb' }]))
+            }
+            asyncTest()
+                .catch((error) => { throw error })
+
+        })
+    })
+    describe('ActionUpdateTitle', () => {
+        test('セットされたタイトルを上書きできる', (done) => {
+
+            const asyncTest = async () => {
+
+                const roomid = new RoomId('-NFxULh4uJJZO4WnYMl4')
+                const db = getDatabase()
+                await set(ref(db, `rooms/${roomid.Id()}`), {
+                    title: 'テストタイトル',
+                    adminUserKey: 'Test ID',
+                    activeQuestionnaire: 'テスト質問',
+                    stamp: ['1', '2', '3']
+                })
+
+                const mockStore = mockStoreCreater(initialState)
+
+                mockStore.subscribe(() => {
+                    if (mockStore.getActions().length > 1) {
+                        const act = mockStore.getActions()[1] as PayloadAction<Room>
+                        expect(act.payload.title).toEqual('新タイトル')
+                        done()
+                    }
+                })
+                await mockStore.dispatch(setRoomAction(roomid))
+                await mockStore.dispatch(ActionUpdateTitle(roomid, '新タイトル'))
+            }
+            asyncTest()
+                .catch((error) => { throw error })
+
         })
     })
 })

@@ -1,6 +1,6 @@
 import { FC, useState, ChangeEvent } from 'react'
 import { useAppDispatch } from '../../../store'
-import { setRoomAction } from '../../../store/room/Actions'
+import { setRoomAction, RoomId } from '../../../store/room'
 
 
 import Button from 'react-bootstrap/Button'
@@ -12,7 +12,7 @@ export const RoomEntry: FC = () => {
   //イベント定義
   const dispatch = useAppDispatch()
   const OnNyusituClick = async () => {
-    await dispatch(setRoomAction(roomId))
+    await dispatch(setRoomAction(new RoomId(roomId)))
   }
 
   // 送信コメント State
