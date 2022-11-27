@@ -4,6 +4,19 @@
 name: Deploy to Firebase Hosting on PR
 'on': pull_request
 jobs:
+  test:
+    name: Test
+    # needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+
+      - name: Install Firebase Emulator Suite
+        run: npm install -g firebase-tools@9.20.0
+   
+      - name: Run all the tests
+        run: cd waiwai-web && npm ci && firebase emulators:exec 'npm run test'
   build_and_preview:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
